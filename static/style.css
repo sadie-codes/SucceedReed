@@ -1,0 +1,535 @@
+
+*{
+    font-family: cursive;
+}
+
+:root {
+    --main-green: green;
+    --main-white: white;
+    --main-black: black;
+    --main-lightgreen: lightgreen;
+
+    --border-green: forestgreen;
+    --container-green: rgb(214, 247, 202);
+    --btn-red: red;
+    --btn-lime: lime;
+    --btn-blue: skyblue;
+    --description-gray: gray;
+
+}
+
+.background-container {
+    background-color: var(--container-green);
+}
+
+.header-container {
+    display: grid;
+    place-items: center;
+    background-color: var(--main-lightgreen);
+    border-style: solid;
+    border-width: 5px;
+    border-color: var(--main-green);
+
+}
+
+.header {
+    text-align: center;
+    color: var(--main-green);
+    font-weight: 100;
+    font-size: 50px;
+
+}
+.header-description{
+    color: var(--main-white);
+}
+
+
+/*Help menu*/
+.help-btn {
+    background-color: transparent;
+    border-color: transparent;
+    cursor: pointer;
+    justify-self: flex-end;
+    top: 20px;
+    right: 20px;
+    aspect-ratio: 1; 
+}
+
+.help-img {
+    background-color: var(--main-white);
+    border-radius: 100%;
+}
+
+.help-popup {
+    width: 900px;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--main-green);
+    border-color: var(--main-black);
+    border-style: solid;
+    border-width: 3px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    /*text-align: center; */
+    padding: 0 30px 30px;
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4s;
+}
+
+.help-container {
+    height: 650px;
+    width: 820px;
+    background-color: var(--main-white);
+    border-color: var(--main-black);
+    border-radius: 4px;
+    border-style: solid;
+}
+
+.help {
+    height: 100%;
+    width: 100%;
+    border: transparent;
+}
+
+
+
+
+.flex-container{
+    display:flex;
+    flex: 1 1 0;
+}
+
+.column{
+    border: 1px solid var(--main-white);
+    height: 500px;
+    justify-content: center;
+    width: 100%
+}
+
+
+
+/*sizes for the check and x marks*/
+.check-mark {
+    width:40px;
+    height:100%;
+    margin-right: 0px;
+    padding-left: 4px;
+}
+.x-mark {
+    width:40px;
+    height:100%;
+    margin-right: 0px;
+    zoom: 125%;
+
+}
+
+
+/*Recommended reeds section*/
+.rec-title {
+    color: var(--main-white);
+    text-align: center;
+    font-weight: 100;
+    margin-top: 20px;
+    margin-bottom: auto;
+}
+.rec-box{
+    background-color: var(--main-green);
+    border-color: var(--border-green);
+    border-width: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.rec-scrollable-box {
+    background-color: var(--main-white);
+    border-width: 4px;
+    border-color: var(--main-black);
+    border-style: solid;
+    width: 400px;
+    height: 380px;
+    margin-bottom: 50px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 0 5px 5px var(--main-black);
+    
+}
+
+.reed-table{
+    border: 2px solid var(--main-black);
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.rec-titles {
+    color: var(--main-black);
+    background-color: var(--main-white);
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: auto;
+    font-weight: 100;
+    border-bottom-style: solid;
+    border-bottom-width: 3px;
+    border-bottom-color: var(--main-black);
+    position: sticky;
+    top: 0;
+}
+
+.rec-info {
+    color: var(--main-black);
+    text-align: left;
+}
+
+
+
+/*Practice Session section*/
+.practice-title {
+    color: var(--main-black);
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-weight: 100;
+}
+.practice-box{
+    background-color:var(--main-white);
+    border-color: var(--main-black);
+    border-width: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.best-reeds {
+    color: var(--main-black);
+    margin-bottom: 20px;
+    margin-top: 20px;
+    font-weight: 400;
+}
+
+.add-reed-btn{
+    padding: 10px 30px;
+    background: var(--btn-lime);
+    color: var(--main-white);
+    border: 5px solid var(--main-black);
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: 500;
+    text-shadow: 2px 2px 4px var(--main-black);
+    border-radius: 30px;
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+.add-session-btn{
+    padding: 50px 50px;
+    background: var(--btn-red);
+    color: var(--main-white);
+    border: 5px solid var(--main-black);
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: 500;
+    text-shadow: 2px 2px 4px var(--main-black);
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/*Break in box (inherits a lot from the recommended section)*/
+.break-in-title {
+    color: var(--main-white);
+    text-align: center;
+    font-weight: 100;
+}
+.break-in-box{
+    background-color:var(--main-green);
+    border-color: var(--border-green);
+    border-width: 5px;
+}
+
+/*Option button and menu*/
+.options-btn {
+    width: 10px;
+    height: 100%;
+    border-width: 0px;
+    visibility: hidden;
+    background-color: var(--main-white);
+    margin-right: 30px;
+    margin-left: 5px;
+    cursor: pointer;
+    z-index: 1000;
+}
+.options-img {
+    width: 10px;
+    height: 100%;
+    zoom: 350%;
+    visibility: hidden;
+}
+
+.options-menu {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+}
+.options-menu-delete {
+    cursor: pointer;
+    display: none;
+    background-color: var(--main-white);
+    color: var(--btn-red);
+    border-color: var(--main-black);
+    border-width: 2px;
+    border-bottom-width: 0px;
+    border-style: solid;
+    font-weight: 600;
+}
+
+.options-menu-view {
+    cursor: pointer;
+    display: none;
+    background-color: var(--main-white);
+    color: var(--btn-blue);
+    border-color: var(--main-black);
+    border-width: 2px;
+    border-style: solid;
+    font-weight: 600;
+}
+
+/*hover class that allows the options button to appear when the row is hovered over*/
+.reed-rows:hover .options-btn {
+    visibility: visible;
+}
+.reed-rows:hover .options-img {
+    visibility: visible;
+}
+
+/*Delete Menu (from options)*/
+
+.delete-btns {
+    display: flex;
+}
+
+.yes-delete {
+    color: var(--main-white);
+    background-color: var(--btn-lime);
+    border-color: var(--main-black);
+    border-style: solid;
+    border-radius: 4px;
+    margin-right: auto;
+    margin-left: 15px;
+    font-weight: 800;
+    font-size: 20px;
+    padding: 5px 25px 5px 25px;
+    cursor: pointer;
+}
+
+.no-delete {
+    color: var(--main-white);
+    background-color: var(--btn-red);
+    border-color: var(--main-black);
+    border-style: solid;
+    border-radius: 4px;
+    margin-left: auto;
+    margin-right: 15px;
+    font-weight: 800;
+    font-size: 20px;
+    padding: 5px 25px 5px 25px;
+    cursor: pointer;
+}
+
+
+/*View popup (from options)*/
+.view-popup {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--border-green);
+    border-color: var(--main-black);
+    border-style: solid;
+    border-width: 3px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    /*text-align: center; */
+    padding: 0 30px 30px;
+    color: var(--main-black);
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4s;
+
+}
+
+.view-info-popup {
+    width: 300px;
+    background-color: var(--main-white);
+    border-style: solid;
+    border-color: var(--main-black);
+    border-radius: 2px;
+    border-width: 3px;
+}
+
+.view-popup-text {
+    color: var(--main-black);
+    text-align: center;
+}
+
+/*Reed and Session popups*/
+.reed-popup{
+    width: 400px;
+    background: var(--main-lightgreen);
+    border-radius: 6px;
+    border-color: var(--main-black);
+    border-style: solid;
+    border-width: 3px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    padding: 0 30px 30px;
+    color: var(--main-black);
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4s;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+.reed-popup-title {
+    color: var(--main-white);
+    font-weight: 10px;
+}
+.reed-popup-input-box {
+    border: 3px solid var(--main-green);
+}
+.reed-popup-submit-btn {
+    background-color: var(--main-green);
+    color: var(--main-white);
+    font-size: 15px;
+    margin-top: 20px;
+    border-color: var(--main-black);
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px 30px;
+    cursor: pointer;
+
+}
+.reed-popup-close-btn {
+    background-color: var(--main-black);
+    color: var(--main-white);
+    font-size: 15px;
+    border-color: var(--main-black);
+    border-style: solid;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: auto;
+    display: block;
+    margin-right: 0;
+}
+
+.length-note {
+    color: var(--description-gray);
+    font-size: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+
+
+.session-popup{
+    width: 400px;
+    background: var(--main-white);
+    border-radius: 6px;
+    border-color: var(--main-black);
+    border-style: solid;
+    border-width: 3px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transform: translate(-50%, -50%) scale(0.1);
+    /*text-align: center; */
+    padding: 0 30px 30px;
+    color: var(--main-black);
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4s;
+}
+
+.session-popup-close-btn{
+    background-color: var(--main-lightgreen);
+    color: var(--main-white);
+    font-size: 15px;
+    border-color: var(--main-black);
+    border-style: solid;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: auto;
+    display: block;
+    margin-right: 0;
+}
+.session-face-container {
+    display: flex;
+    flex: 1 1 0;
+    gap: 10px;
+}
+.session-face-image {
+    width: 100%;
+    
+}
+
+.session-face-btn {
+    background-color: var(--main-white);
+    border-radius: 10px;
+    border-width: 3px;
+    border-color: var(--description-gray);
+    cursor: pointer;
+}
+
+.session-face-btn-selected {
+    border-color: var(--btn-lime);
+}
+
+.session-popup-title {
+    color: var(--main-black);
+    text-align: center;
+}
+.session-popup-submit-btn {
+    background-color: var(--btn-lime);
+    color: var(--main-white);
+    font-size: 15px;
+    font-weight: 800;
+    margin-top: 20px;
+    border-color: var(--main-black);
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px 30px;
+    cursor: pointer;
+}
+.session-error{
+    text-align: center;
+}
+.session-popup-input-box {
+    border: 3px solid var(--main-black);
+}
+
+
+/*Popup animation, so the popup increases in size as it opens and comes from the top*/
+.open-popup{
+    visibility: visible;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.popup-error{
+    color: var(--btn-red);
+    visibility: hidden;
+    display: none;
+}

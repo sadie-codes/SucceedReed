@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SucceedReed</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    </head>
+
+
+    <main class="background-container">
+        <div class="header-container">
+            <button id="help-btn" class="help-btn" type="button"><img class="help-img" src="{{url_for('static', filename='marks/help.png')}}"></button>
+            <header class="header">SucceedReed</header>
+            <p class="header-description">
+                Succeed in your Reed game by 
+                logging practice sessions 
+                and keeping track of your reeds!
+            </p>
+        </div>
+
+        <div class="flex-container">
+            <div class="column rec-box">
+                <h2 class="rec-title">Recommended Reeds</h2>
+                <div id="rec-box" class="rec-scrollable-box">
+                    <!--Uses a table to organize reeds for ease of adding from JS-->
+                    <table id="rec-table" class="reed-table">
+                        <th class="rec-titles">ID</th>
+                        <th class="rec-titles">Type</th>
+                        <th class="rec-titles">Health Score</th>
+                        <th class="rec-titles">Rested</th>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="column practice-box">
+                <h2 class="practice-title">Practice Session</h2>
+                <h3 id="best-reed" class="best-reeds"></h3>
+                <h3 id="rec-break-in" class="best-reeds"></h3>
+                <button id="add-session-btn" class="add-session-btn" type="button">Log Session</button>
+                <button id="add-btn" type="button" class="add-reed-btn" style="text-align:center;">Add Reed</button>   
+            </div>
+
+
+            <br>
+
+            <div class="column rec-box">
+                <h2 class="break-in-title">Break-In Reeds</h2>
+                <div id="break-in-box" class="rec-scrollable-box">
+                    <table id="break-in-table" class="reed-table">
+                        <th class="rec-titles">ID</th>
+                        <th class="rec-titles">Type</th>
+                        <th class="rec-titles">Step</th>
+                        <th class="rec-titles">Days Rested</th>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!--Popups have to live outside of the flex container, to not mess up the layout-->
+        <div id="options-menu" class="options-menu">
+            <button id="options-menu-delete" type="button" class="options-menu-delete">Delete Reed</button>
+            <button id="options-menu-view" type="button" class="options-menu-view">View Reed</button>
+        </div>
+        
+
+        <div id="delete-popup" class="reed-popup">
+            <h2 id="delete-header" class="reed-popup-title">Are you sure you want to delete</h2>
+            <div id="delete-btns" class="delete-btns">
+                <button id="yes-delete" class="yes-delete" type="button">Yes</button>
+                <button id="no-delete" class="no-delete" type="button">No</button>
+            </div>
+        </div>
+
+        <div class="reed-popup" id="reed-popup">
+                    <button id="reed-popup-close-btn" class="reed-popup-close-btn" type="button" >X</button>
+                    <h2 class="reed-popup-title">Enter your reed's details here: </h2>
+                    <h3 id="input-blank" class="popup-error">Please fill out all the info!</h3>
+                    <h3 id="input-incorrect-type" class="popup-error">Strength must be a number!</h3>
+                    <h3 id="input-existing" class="popup-error">That reed already exists!</h3>
+                    <form class="form" method="POST">
+                        <label for="reed-id">ID</label>
+                        <input id="reed-id" class="reed-popup-input-box" name="reed_id" placeholder="Ex. J1, C2, Rd1 (make your own)" maxlength="4">
+                        <p class="length-note">Max Length: 4 characters</p>
+                        <br>
+
+                        <label for="reed-strength">Strength</label>
+                        <input id="reed-strength" class="reed-popup-input-box" name="reed_strength" placeholder="Ex. 3, 4.5 etc." maxlength="3">
+                        <p class="length-note">Max Length: 3 characters</p>
+                        <br>
+
+                        <label for="reed-type">Type</label>
+                        <input id="reed-type" class="reed-popup-input-box" name="reed_type" placeholder="Ex. Jazz, V16 etc." maxlength="8">
+                        <p class="length-note">Max Length: 8 characters</p>
+                        <!--Classified as "button" to avoid default submitting behavior, like being able to press "enter"-->
+                        <button id="reed-popup-submit-btn" class="reed-popup-submit-btn" type="button" >Submit</button>
+                    </form>
+        </div>
+
+        <div class="session-popup" id="session-popup">
+                    <button id="session-popup-close-btn" class="session-popup-close-btn" type="button" >X</button>
+                    <h2 class="session-popup-title">How did your reed feel?</h2>
+                    <h3 id="face-not-selected" class="popup-error session-error">Please select a rating!</h3>
+                    <h3 id="blank" class="popup-error session-error">Please fill out all info!</h3>
+                    <h3 id="id-not-valid" class="popup-error session-error">That is not an existing id!</h3>
+                    <h3 id="minutes-not-integer" class="popup-error session-error">Minutes has to be an integer!</h3>
+                    <div class="session-face-container">
+                        <button id="sad-face-btn" class="session-face-btn" type="button"><img class='session-face-image' src="{{url_for('static', filename='faces/sad-face.jpg')}}" alt="bad"></button>
+                        <button id="ok-face-btn" class="session-face-btn" type="button"><img class='session-face-image' src="{{url_for('static', filename='faces/ok-face.jpg')}}" alt="ok"></button>
+                        <button id="happy-face-btn" class="session-face-btn" type="button"><img  class='session-face-image' src="{{url_for('static', filename='faces/happy-face.jpg')}}" alt="good"></button>
+                    </div>
+                    <label for="reed-choice">What reed did you use?</label>
+                    <input id="reed-choice" class="session-popup-input-box" name="reed_choice" placeholder="Type a reed id">
+
+                    <label for="minutes">Minutes</label>
+                    <input id="minutes" class="session-popup-input-box" name="minutes" placeholder="How long did you play?">
+                    <button id="submit-session" class="session-popup-submit-btn" type="button">Submit</button>       
+        </div>
+
+        <div id="view-popup" class="view-popup">
+            <button id="view-popup-close-btn" class="reed-popup-close-btn" type="button" >X</button>
+            <div id="view-info-popup" class="view-info-popup">
+                <!--Empty so JS can fill the information based on what reed is selected-->
+                <p id="view-popup-text" class="view-popup-text"></p>
+            </div>
+        </div>
+
+        <div id="help-popup" class="help-popup">
+            <button id="help-close-btn" class="reed-popup-close-btn" type="button" >X</button>
+            <div id="help-container", class="help-container">
+                <!--Uses iframe to have a pageless, clean format of my document in an html file-->
+                <iframe class="help" src="{{url_for('static', filename='help/SucceedReedHelp.html')}}">
+                </iframe>
+            </div>
+
+        </div>
+
+
+        <p>Need to buy a reed?</p>
+        <a href="https://www.amazon.com/s?k=vandoren+reeds&adgrpid=187238245198&hvadid=779611925743&hvdev=c&hvexpln=0&hvlocphy=1016669&hvnetw=g&hvocijid=16011446291498313205--&hvqmt=e&hvrand=16011446291498313205&hvtargid=kwd-311272510012&hydadcr=29618_14609498_25387&mcid=31a54f0378823dbcb62dfc04b37bc6e3&tag=googhydr-20&ref=pd_sl_8ovsry7ygt_e" 
+        target="_blank"
+        title="Goes to amazon.">
+            Click here.
+        </a>
+        <script src="{{url_for('static', filename='state.js')}}"></script>
+    </main>
+</html>
+
