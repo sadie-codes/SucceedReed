@@ -13,10 +13,10 @@ Professionals and beginners alike can use this tool to determine what reeds are 
 
 How can you get started?:
 ----------------------------------------------------------------------------------------------------------------------------------------------
-Make sure you have the latest version of Python and Git installed.
-git clone https://github.com/sadie-codes/SucceedReed
-pip install -r requirements.txt
-flask run
+Make sure you have the latest version of Python and Git installed. <br>
+git clone https://github.com/sadie-codes/SucceedReed <br>
+pip install -r requirements.txt <br>
+flask run 
 
 Where can I get help?:
 --------------------------------------------------------------------------------------------------------------------------------------------------
