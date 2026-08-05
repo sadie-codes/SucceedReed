@@ -270,8 +270,8 @@ function openMenuPopup(btn_id) {
         menu_delete.style.display = "flex";
         menu_view.style.display = "flex"
         //accounts for gaps and places the menu at the bottom right corner of the button
-        menu.style.top = `${btn_rect.top + (btn_rect.height/2) + 10}px`;
-        menu.style.left = `${btn_rect.left + (btn_rect.width*2) + 4}px`;
+        menu.style.top = `${btn_rect.top + window.scrollY + (btn_rect.height/2)}px`;
+        menu.style.left = `${btn_rect.left + window.scrollX + (btn_rect.width*2)}px`;
 
         //uses activeListener to track and remove the menu after it is closed
         activeListener = (event) => {
