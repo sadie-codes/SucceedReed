@@ -13,7 +13,10 @@ Professionals and beginners alike can use this tool to determine what reeds are 
 
 How can you get started?:
 ----------------------------------------------------------------------------------------------------------------------------------------------
-You can get started simply by creating a local website on your system. Add your first reed and your first session!
+Make sure you have the latest version of Python and Git installed.
+git clone https://github.com/sadie-codes/SucceedReed
+pip install -r requirements.txt
+flask run
 
 Where can I get help?:
 --------------------------------------------------------------------------------------------------------------------------------------------------
