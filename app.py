@@ -9,7 +9,8 @@ app = Flask(__name__)
 #creates a global database engine to create a sqlalchemy session in any app route or function
 engine = start_engine()
 
-@app.route('/home', methods=['GET', 'POST'])
+
+@app.route('/', methods=['GET', 'POST'])
 def home():
     return render_template('home.html')
 
