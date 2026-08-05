@@ -93,4 +93,4 @@ def get_reed(reed_id):
 
 #prevents app running when the file is imported
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run()
