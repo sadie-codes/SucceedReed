@@ -13,12 +13,10 @@ app.secret_key = os.environ.get("SECRET_KEY", "local_dev_key")
 engine = start_engine()
 
 def get_user_id():
-    if not app.secret_key == "local_dev_key":
-        if "user_id" not in session:
-            #generates a user_id
-            session["user_id"] = secrets.token_hex(16)
-        return session["user_id"]
-    return "dev_key"
+    if "user_id" not in session:
+        #generates a user_id
+        session["user_id"] = secrets.token_hex(16)
+    return session["user_id"]
 
 
 @app.route('/', methods=['GET', 'POST'])
