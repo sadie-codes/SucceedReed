@@ -12,6 +12,12 @@ BREAK_IN_SCHEDULE = [5, 5, 10, 15, 20]
 class Base(DeclarativeBase):
     pass
 
+class User(Base):
+    __tablename__ = "users"
+
+    user_id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    reeds: Mapped[list["Reed"]] = relationship(back_populates="user", cascade="all, delete")
+
 class ReedSession(Base):
     """Represents a practice session using a specific reed from the database
 
@@ -147,24 +153,6 @@ def sortby(attribute, reed_list):
                 sorted_list.append(item)
         return sorted_list
 
-def get_new_user(db_session: Session):
-    """Obtains the id of a new user based on the last user added.
-    
-    Args:
-        db_session: the SQLAlchemy database session to access the data.
-    
-    Returns:
-        An integer representing the id of the new user.
-    """
-    user_ids = list(db_session.scalars(select(Reed.user_id).distinct()).all())
-    sorted_ids = sorted(user_ids)
-
-    if sorted_ids:
-        new_user = int(sorted_ids[-1]) + 1
-    else:
-        new_user = 1
-
-    return new_user
 
 
 class Reed(Base):
@@ -189,7 +177,8 @@ class Reed(Base):
     __tablename__ = "reeds"
     db_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     id: Mapped[str] = mapped_column(String())
-    user_id: Mapped[str] = mapped_column(String())
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.user_id"))
+    user: Mapped["User"] = relationship(back_populates="reeds")
     reed_type: Mapped[str] = mapped_column(String())
     strength: Mapped[float] = mapped_column(Float())
 
