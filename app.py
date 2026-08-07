@@ -12,9 +12,6 @@ app.secret_key = os.environ.get("SECRET_KEY", "local_dev_key")
 #creates a global database engine to create a sqlalchemy session in any app route or function
 engine = start_engine()
 
-logged_in = False
-user_id = None
-
 def get_user_id():
     if not app.secret_key == "local_dev_key":
         if "user_id" not in session:
@@ -26,11 +23,6 @@ def get_user_id():
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    global logged_in
-    global user_id
-    if not logged_in:
-        user_id = get_user_id()
-        logged_in = True
     return render_template('home.html')
 
 @app.route('/save-reed-data', methods=['POST'])
@@ -44,6 +36,7 @@ def save_reed_data():
 
     #activates a session and commits the changes to update the database
     with Session(bind=engine) as db_session:
+        user_id = session['user_id']
         new_reed = Reed(id=reed_id, reed_type=reed_type, strength=reed_strength, user_id=user_id)
         db_session.add(new_reed)
         db_session.commit()
@@ -55,6 +48,7 @@ def save_session_data():
     reed_id = data.get('reed_id')
     rating = data.get('rating')
     minutes = int(data.get('minutes_played'))
+    user_id = session['user_id']
     with Session(bind=engine) as db_session:
         #uses a select statement to get the reed with the correct id and user_id. .all() turns it into a list
         reed = (db_session.scalars(select(Reed).where(Reed.id == reed_id, Reed.user_id == user_id)).all())[0]
@@ -71,6 +65,7 @@ def delete_reed():
     with Session(bind=engine) as db_session:
         data = request.get_json()
         reed_id = data.get('reed')
+        user_id = session['user_id']
         #uses a select statement to get the reed with the correct id and user_id. .all() turns it into a list
         reed = (db_session.scalars(select(Reed).where(Reed.id == reed_id, Reed.user_id == user_id)).all())[0]
         db_session.delete(reed)
@@ -80,6 +75,7 @@ def delete_reed():
 @app.route('/get-rec-data', methods=["GET"])
 def get_rec_data():
     with Session(bind=engine) as db_session:
+        user_id = session['user_id']
         the_reeds = Reed.recommended_reeds(user_id, db_session)
         #turned to json_serializable because it can't parse an ORM object from sql_alchemy
         #returns a dictionary and turns the sessions into individual dictionaries to represent the objects
@@ -91,6 +87,7 @@ def get_breakin_data():
     with Session(bind=engine) as db_session:
         #turned to json_serializable because it can't parse an ORM object from sql_alchemy
         #returns a dictionary and turns the sessions into individual dictionaries to represent the objects
+        user_id = session['user_id']
         breakin_reeds = Reed.rec_breakin_reeds(user_id, db_session)
         json_serializable = Reed.to_json_serializable(breakin_reeds)
     return jsonify({"reeds": json_serializable})
@@ -100,6 +97,7 @@ def get_all_data():
     with Session(bind=engine) as db_session:
         #turned to json_serializable because it can't parse an ORM object from sql_alchemy
         #returns a dictionary and turns the sessions into individual dictionaries to represent the objects
+        user_id = session['user_id']
         rec_reeds = Reed.to_json_serializable(Reed.recommended_reeds(user_id, db_session))
         breakin_reeds = Reed.to_json_serializable(Reed.rec_breakin_reeds(user_id, db_session))
         rec_reeds.extend(breakin_reeds)
@@ -110,6 +108,7 @@ def get_all_data():
 def get_reed(reed_id):
     with Session(bind=engine) as db_session:
         #uses a select statement to get the reed with the correct id and user_id. .all() turns it into a list
+        user_id = session['user_id']
         reed = (db_session.scalars(select(Reed).where(Reed.id == reed_id, Reed.user_id == user_id)).all())[0]
         reed_json = Reed.to_json_serializable([reed])
     return jsonify({'reed': reed_json})
