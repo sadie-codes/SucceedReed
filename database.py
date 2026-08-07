@@ -29,7 +29,7 @@ class ReedSession(Base):
     date: Mapped[datetime] = mapped_column(DateTime(), primary_key=True)
     rating: Mapped[str] = mapped_column(String())
     minutes: Mapped[int] = mapped_column(Integer())
-    parent_id: Mapped[str] = mapped_column(ForeignKey("reeds.id"))
+    parent_id: Mapped[str] = mapped_column(ForeignKey("reeds.db_id"))
 
     #back populates with the reed class to syncronize changes across the two classes.
     #each session is put in a list as an attribute of a Reed object, so back_populates is used to sync changes.
@@ -147,7 +147,24 @@ def sortby(attribute, reed_list):
                 sorted_list.append(item)
         return sorted_list
 
+def get_new_user(db_session: Session):
+    """Obtains the id of a new user based on the last user added.
+    
+    Args:
+        db_session: the SQLAlchemy database session to access the data.
+    
+    Returns:
+        An integer representing the id of the new user.
+    """
+    user_ids = list(db_session.scalars(select(Reed.user_id).distinct()).all())
+    sorted_ids = sorted(user_ids)
 
+    if sorted_ids:
+        new_user = int(sorted_ids[-1]) + 1
+    else:
+        new_user = 1
+
+    return new_user
 
 
 class Reed(Base):
@@ -159,8 +176,10 @@ class Reed(Base):
         Each step is associated with an optimal amount of playing time according to the BREAK_IN_SCHEDULE list.
     
         Attributes:
+            db_id: An integer that auto increments to uniquely identify each reed, since users could have a reed with the same name.
             id: A string that represents the user-chosen key to identify the reed. The primary key.
             reed_type: A string that represents the type of the reed.
+            user_id: A string that represents the id of the user who added it.
             strength: A float that represents the strength of the reed (also known as the thickness).
             break_in_date: A datetime type that represents when the reed was first added.
             step: An integer 1-5 or None that represents how far along the user is to breaking in the reed (1 by default).
@@ -168,8 +187,9 @@ class Reed(Base):
             sessions: A list of ReedSession objects that holds all of the practice sessions the user has logged.
         """
     __tablename__ = "reeds"
-    
-    id: Mapped[str] = mapped_column(String(), primary_key=True)
+    db_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[str] = mapped_column(String())
+    user_id: Mapped[str] = mapped_column(String())
     reed_type: Mapped[str] = mapped_column(String())
     strength: Mapped[float] = mapped_column(Float())
 
@@ -177,7 +197,6 @@ class Reed(Base):
     step: Mapped[int] = mapped_column(Integer(), default=1, nullable=True)
     minutes_played: Mapped[int] = mapped_column(Integer(), default=0)
     sessions: Mapped[List["ReedSession"]] = relationship(back_populates="reed", cascade="all, delete")
-
 
     #recommended playing time of a reed that is broken in or has step = "None"
     #if the length of a session exceeds this, the overplayed factor is applied to the rating
@@ -187,7 +206,7 @@ class Reed(Base):
     DAYS_TO_REST = 1
 
     def __repr__(self):
-        return f"Reed(id={self.id!r}, reed_type={self.reed_type!r}, strength={self.strength!r}, break_in_date={self.break_in_date!r}, step={self.step!r}, minutes_played={self.minutes_played!r}, sessions={self.sessions!r}"
+        return f"Reed(db_id={self.db_id!r}, id={self.id!r}, user_id={self.user_id!r}, reed_type={self.reed_type!r}, strength={self.strength!r}, break_in_date={self.break_in_date!r}, step={self.step!r}, minutes_played={self.minutes_played!r}, sessions={self.sessions!r}"
     
     @property
     def recommended_time(self):
@@ -282,11 +301,12 @@ class Reed(Base):
             self.minutes_played += session.minutes
 
     @classmethod
-    def recommended_reeds(cls, db_session: Session):
+    def recommended_reeds(cls, cur_id, db_session: Session):
         """Obtains a list of the recommended reeds in order of health score and most rested
 
         Args:
             cls: Reed class to call the method, since it is a class method.
+            cur_id: This is the current id of the user using the application.
             db_session: An active SQLAlchemy Session object.
 
         Returns:
@@ -295,7 +315,7 @@ class Reed(Base):
         """
 
         #selects the Reed class from the table and returns the reeds in a Sequence to sort
-        all_reeds = db_session.scalars(select(cls)).all()
+        all_reeds = db_session.scalars(select(cls).where(cls.user_id == cur_id)).all()
         #the reeds are put in a python list, instead of a Sequence
         #while the list contains Self@Reed (ORM objects), this gets transformed into a dictionary to send to JS
         rec_reeds = []
@@ -314,11 +334,12 @@ class Reed(Base):
         return with_rested_first
 
     @classmethod
-    def rec_breakin_reeds(cls, db_session: Session):
+    def rec_breakin_reeds(cls, cur_id, db_session: Session):
         """Obtains a list of the break-in reeds in order of health score and most rested
         
                 Args:
                     cls: Reed class to call the method, since it is a class method.
+                    cur_id: This is the current id of the user using the application.
                     db_session: An active SQLAlchemy Session object.
         
                 Returns:
@@ -327,7 +348,7 @@ class Reed(Base):
                 """
         session_exists = False
         #selects the Reed class from the table and returns the reeds in a Sequence to sort
-        all_reeds = db_session.scalars(select(cls)).all()
+        all_reeds = db_session.scalars(select(cls).where(cls.user_id == cur_id)).all()
         breakin_reeds = [r for r in all_reeds if r.step != None]
         
         for breakin_reed in breakin_reeds:
@@ -342,9 +363,9 @@ class Reed(Base):
         return rec_breakin
         
     @classmethod
-    def get_all_info(cls, db_session: Session):
+    def get_all_info(cls, cur_id, db_session: Session):
         info = {}
-        all_reeds = db_session.scalars(select(cls)).all()
+        all_reeds = db_session.scalars(select(cls).where(cls.user_id == cur_id)).all()
         all_reeds = Reed.to_json_serializable(all_reeds)
         for reed in all_reeds:
             for attribute, value in reed.items():
