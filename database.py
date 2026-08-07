@@ -12,11 +12,6 @@ BREAK_IN_SCHEDULE = [5, 5, 10, 15, 20]
 class Base(DeclarativeBase):
     pass
 
-class User(Base):
-    __tablename__ = "users"
-
-    user_id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    reeds: Mapped[list["Reed"]] = relationship(back_populates="user", cascade="all, delete")
 
 class ReedSession(Base):
     """Represents a practice session using a specific reed from the database
@@ -177,8 +172,7 @@ class Reed(Base):
     __tablename__ = "reeds"
     db_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     id: Mapped[str] = mapped_column(String())
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.user_id"))
-    user: Mapped["User"] = relationship(back_populates="reeds")
+    user_id: Mapped[str] = mapped_column(String())
     reed_type: Mapped[str] = mapped_column(String())
     strength: Mapped[float] = mapped_column(Float())
 
