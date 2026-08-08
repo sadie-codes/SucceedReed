@@ -13,6 +13,12 @@ Professionals and beginners alike can use this tool to determine what reeds are 
 
 How can you get started?:
 ----------------------------------------------------------------------------------------------------------------------------------------------
+This app is deployed on Render, which is a cloud hosting platform. <br>
+Simply type in https://succeedreed.onrender.com <br>
+Note: The site may take time to power up if it has not been accessed in a while. <br>
+This platform is also NOT reliable for saving data, as it may have a risk of being wiped. <br>
+<br>
+To run locally simply follow these steps: <br>
 Make sure you have the latest version of Python and Git installed. <br>
 git clone https://github.com/sadie-codes/SucceedReed <br>
 pip install -r requirements.txt <br>

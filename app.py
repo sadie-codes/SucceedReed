@@ -14,7 +14,7 @@ engine = start_engine()
 
 def get_user_id():
     if "user_id" not in session:
-        #generates a user_id
+        #generates a user_id if one is not found in the session
         session["user_id"] = secrets.token_hex(16)
     return session["user_id"]
 
