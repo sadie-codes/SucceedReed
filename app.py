@@ -73,7 +73,7 @@ def delete_reed():
 @app.route('/get-rec-data', methods=["GET"])
 def get_rec_data():
     with Session(bind=engine) as db_session:
-        user_id = session['user_id']
+        user_id = get_user_id()
         the_reeds = Reed.recommended_reeds(user_id, db_session)
         #turned to json_serializable because it can't parse an ORM object from sql_alchemy
         #returns a dictionary and turns the sessions into individual dictionaries to represent the objects
@@ -85,7 +85,7 @@ def get_breakin_data():
     with Session(bind=engine) as db_session:
         #turned to json_serializable because it can't parse an ORM object from sql_alchemy
         #returns a dictionary and turns the sessions into individual dictionaries to represent the objects
-        user_id = session['user_id']
+        user_id = get_user_id()
         breakin_reeds = Reed.rec_breakin_reeds(user_id, db_session)
         json_serializable = Reed.to_json_serializable(breakin_reeds)
     return jsonify({"reeds": json_serializable})
@@ -95,7 +95,7 @@ def get_all_data():
     with Session(bind=engine) as db_session:
         #turned to json_serializable because it can't parse an ORM object from sql_alchemy
         #returns a dictionary and turns the sessions into individual dictionaries to represent the objects
-        user_id = session['user_id']
+        user_id = get_user_id()
         rec_reeds = Reed.to_json_serializable(Reed.recommended_reeds(user_id, db_session))
         breakin_reeds = Reed.to_json_serializable(Reed.rec_breakin_reeds(user_id, db_session))
         rec_reeds.extend(breakin_reeds)
@@ -106,7 +106,7 @@ def get_all_data():
 def get_reed(reed_id):
     with Session(bind=engine) as db_session:
         #uses a select statement to get the reed with the correct id and user_id. .all() turns it into a list
-        user_id = session['user_id']
+        user_id = get_user_id()
         reed = (db_session.scalars(select(Reed).where(Reed.id == reed_id, Reed.user_id == user_id)).all())[0]
         reed_json = Reed.to_json_serializable([reed])
     return jsonify({'reed': reed_json})
